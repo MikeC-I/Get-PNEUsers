@@ -56,17 +56,17 @@ Function Write-Log {
                     $newfilename = "$($logfilename)"+ (Get-Date -Format "yyyymmddhhmmss").ToString()
                     Rename-Item -Path $logfile -NewName $newfilename
                     New-Item $logfile -ItemType File
-                    $this_Date = Get-Date -Format G
+                    $this_Date = Get-Date -Format "MM/dd/yyyy hh:mm:ss tt"
                     Add-Content -Path $logfile -Value "$this_Date [$env:COMPUTERNAME] $logdetail"
                 }
                 else {
-                    $this_Date = Get-Date -Format G
+                    $this_Date = Get-Date -Format "MM/dd/yyyy hh:mm:ss tt"
                     Add-Content -Path $logfile -Value "$this_Date [$env:COMPUTERNAME] $logdetail"
                 }
             }
             else {
                 New-Item $logfile -ItemType File
-                $this_Date = Get-Date -Format G
+                $this_Date = Get-Date -Format "MM/dd/yyyy hh:mm:ss tt"
                 Add-Content -Path $logfile -Value "$this_Date [$env:COMPUTERNAME] $logdetail"
             }
         }
