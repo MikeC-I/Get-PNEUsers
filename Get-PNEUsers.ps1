@@ -29,7 +29,7 @@ param(
 $scriptPath = Get-Location
 $logfile = "$($scriptPath)\GET-PNEUsers.log"
 $userfile = "$($scriptPath)\PNEUsers.txt"
-$globallogleve = 2
+$globalloglevel = 2
 
 Function Write-Log {  
 
