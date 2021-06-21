@@ -37,10 +37,10 @@ Function Write-Log {
     # Currently implemented 4 logging levels.  1 = DEBUG / VERBOSE, 2 = INFO, 3 = ERROR / WARNING, 4 = CRITICAL
     # Must use the variable $globalloglevel to define what logs will be written.  1 = All logs, 2 = Info and above, 3 = Warning and above, 4 = Only critical.  If no $globalloglevel is defined, defaults to 2
     # Must use the variable $logfile to define the filename (full path or relative path) of the log file to be written to
-    # Auto-rotate feature written but un-tested
-           
+               
     [CmdletBinding()]
-    Param([Parameter(Mandatory = $true)] [string]$logdetail,
+    Param(
+        [Parameter(Mandatory = $true)] [string]$logdetail,
         [Parameter(Mandatory = $false)] [int32]$loglevel = 2
     )
     if (($globalloglevel -ne 1) -and ($globalloglevel -ne 2) -and ($globalloglevel -ne 3) -and ($globalloglevel -ne 4)) {
@@ -51,22 +51,22 @@ Function Write-Log {
         try {
             $logfile_exists = Test-Path -Path $logfile
             if ($logfile_exists -eq 1) {
-                if ((Get-Item $logfile).length/1MB -ge 10) {   # THIS IS THE LOG ROTATION CODE --- UNTESTED!!!!!
-                    $logfilename = ((Get-Item $logdetail).Name).ToString()
-                    $newfilename = "$($logfilename)"+ (Get-Date -Format "yyyymmddhhmmss").ToString()
+                if ((Get-Item $logfile).length/1MB -ge 10) {
+                    $logfilename = [io.path]::GetFileNameWithoutExtension($logfile)
+                    $newfilename = "$($logfilename)"+ (Get-Date -Format "yyyyMMddhhmmss").ToString() + ".log"
                     Rename-Item -Path $logfile -NewName $newfilename
                     New-Item $logfile -ItemType File
-                    $this_Date = Get-Date -Format "MM/dd/yyyy hh:mm:ss tt"
+                    $this_Date = Get-Date -Format "MM\/dd\/yyyy hh:mm:ss tt"
                     Add-Content -Path $logfile -Value "$this_Date [$env:COMPUTERNAME] $logdetail"
                 }
                 else {
-                    $this_Date = Get-Date -Format "MM/dd/yyyy hh:mm:ss tt"
+                    $this_Date = Get-Date -Format "MM\/dd\/yyyy hh:mm:ss tt"
                     Add-Content -Path $logfile -Value "$this_Date [$env:COMPUTERNAME] $logdetail"
                 }
             }
             else {
                 New-Item $logfile -ItemType File
-                $this_Date = Get-Date -Format "MM/dd/yyyy hh:mm:ss tt"
+                $this_Date = Get-Date -Format "MM\/dd\/yyyy hh:mm:ss tt"
                 Add-Content -Path $logfile -Value "$this_Date [$env:COMPUTERNAME] $logdetail"
             }
         }
